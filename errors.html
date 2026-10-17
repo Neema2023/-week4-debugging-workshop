@@ -96,11 +96,14 @@ countdown(5)</pre></div>
 
   <!-- Snippet 6 -->
   <script>
-    function countdown(n) {
-      console.log(n)
-      countdown(n - 1)
-    }
-    countdown(5)
+   function countdown(n) {
+  if (n < 1) return;
+
+  console.log(n);
+  countdown(n - 1);
+}
+
+countdown(5);
   </script>
 </body>
 </html>
