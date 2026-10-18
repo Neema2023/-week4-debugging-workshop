@@ -8,7 +8,9 @@ const cart = [
 function getSubtotal(items) {
   let subtotal = 0;
 
-  for (let i = 0; i <= items.length; i++) {
+  // Bug fix 1: Changed <= to < because items[3] does not exist.
+  // The Console error showed that the code tried to read an undefined item's price.
+  for (let i = 0; i < items.length; i++) {
     subtotal += items[i].price * items[i].qty;
   }
 
@@ -16,8 +18,10 @@ function getSubtotal(items) {
 }
 
 function getDiscount(subtotal) {
-  if (subtotal > 10000) return 0.1;
-  else if (subtotal > 20000) return 0.2;
+  // Bug fix 2: Check the higher discount threshold first.
+  // Otherwise, the 20% discount condition would never be reached.
+  if (subtotal > 20000) return 0.2;
+  else if (subtotal > 10000) return 0.1;
 
   return 0;
 }
@@ -25,9 +29,15 @@ function getDiscount(subtotal) {
 function getTotal(items) {
   const subtotal = getSubtotal(items);
   const discount = getDiscount(subtotal);
-  const total = subtotal - discount;
+
+  // Bug fix 3: discount is a rate, so calculate the discount amount first.
+  const total = subtotal - subtotal * discount;
 
   return total;
 }
 
-console.log(getTotal(cart));
+// Risky data value: "1500" is a string, but multiplication converts it to a number.
+// If we used + instead, JavaScript could concatenate strings and produce a wrong result.
+
+console.log("Subtotal:", getSubtotal(cart));
+console.log("Total:", getTotal(cart));
